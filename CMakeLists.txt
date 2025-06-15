@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.18)
 project(chrono_gpu_scm)
 
 # Finding  the chrono location
-LIST(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/../Chrono/lib")
+LIST(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/../../chrono/build/lib")
 find_package(Chrono
              COMPONENTS Irrlicht
              OPTIONAL_COMPONENTS PardisoMKL
@@ -44,6 +44,10 @@ target_compile_options(my_demo PUBLIC ${CHRONO_CXX_FLAGS})
 target_link_options(my_demo PUBLIC ${CHRONO_LINKER_FLAGS})
 
 target_link_libraries(my_demo ${CHRONO_LIBRARIES})
+
+
+install(TARGETS my_demo
+  DESTINATION lib/${PROJECT_NAME})
 
 # ament_target_dependencies(my_demo
 #   PUBLIC
