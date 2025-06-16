@@ -3,7 +3,12 @@ cmake_minimum_required(VERSION 3.18)
 project(chrono_gpu_scm)
 
 # Finding  the chrono location
-LIST(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/../../chrono/build/lib")
+LIST(APPEND CMAKE_PREFIX_PATH "/home/chrono/chrono/build/cmake/")
+
+set(Chrono_DIR "/home/chrono/chrono/build/cmake/")
+
+set(CHRONO_DATA_DIR "/home/chrono/chrono/data")
+
 find_package(Chrono
              COMPONENTS Irrlicht
              OPTIONAL_COMPONENTS PardisoMKL
@@ -37,21 +42,25 @@ endif()
 
 add_executable(my_demo src/my_example.cpp)
 
-target_compile_definitions(my_demo PUBLIC "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\"") 
-# message("CHRONO_DATA_DIR   =  \"${CHRONO_DATA_DIR}\"")
+#--------------------------------------------------------------
+# Set properties for the executable target
+#--------------------------------------------------------------
 
-target_compile_options(my_demo PUBLIC ${CHRONO_CXX_FLAGS})
-target_link_options(my_demo PUBLIC ${CHRONO_LINKER_FLAGS})
+# Here, we define a macro CHRONO_DATA_DIR which will contain the
+# path to the Chrono data directory, either in its source tree
+# (if using a build version of Chrono), or in its install tree
+# (if using an installed version of Chrono).
+target_compile_definitions(my_demo PRIVATE "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\"") 
 
-target_link_libraries(my_demo ${CHRONO_LIBRARIES})
+if(MSVC)
+    set_target_properties(my_demo PROPERTIES MSVC_RUNTIME_LIBRARY ${CHRONO_MSVC_RUNTIME_LIBRARY})
+endif()
 
+#--------------------------------------------------------------
+# Link to Chrono targets for the requested modules
+#--------------------------------------------------------------
 
-install(TARGETS my_demo
-  DESTINATION lib/${PROJECT_NAME})
+target_link_libraries(my_demo PRIVATE ${CHRONO_TARGETS})
 
-# ament_target_dependencies(my_demo
-#   PUBLIC
-#   orocos_kdl
-# )
 
 ament_package()

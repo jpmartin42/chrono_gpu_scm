@@ -18,7 +18,6 @@
 #include "chrono/physics/ChLinkMate.h"
 #include "chrono/assets/ChTexture.h"
 #include "chrono/core/ChRealtimeStep.h"
-
 #include "chrono_irrlicht/ChVisualSystemIrrlicht.h"
 
 // Use the namespace of Chrono
@@ -42,8 +41,8 @@ int main(int argc, char* argv[]) {
                                                      true,       // create visualization asset
                                                      false       // no collision geometry
                                                      );
-    floorBody->SetPos(ChVector<>(0, -2, 0));
-    floorBody->SetBodyFixed(true);
+    floorBody->SetPos(ChVector3<>(0, -2, 0));
+    floorBody->SetFixed(true);
 
     sys.Add(floorBody);
 
@@ -54,8 +53,8 @@ int main(int argc, char* argv[]) {
                                                         true,         // create visualization asset
                                                         false         // no collision geometry
                                                         );
-    pendulumBody->SetPos(ChVector<>(0, 3, 0));
-    pendulumBody->SetPos_dt(ChVector<>(1, 0, 0));
+    pendulumBody->SetPos(ChVector3<>(0, 3, 0));
+    pendulumBody->SetPosDt(ChVector3<>(1, 0, 0));
 
     sys.Add(pendulumBody);
 
@@ -64,7 +63,7 @@ int main(int argc, char* argv[]) {
 
     auto sphericalLink =
         std::make_shared<ChLinkMateGeneric>(true, true, true, false, false, false);  // x,y,z,Rx,Ry,Rz constrains
-    ChFrame<> link_position_abs(ChVector<>(0, 4, 0));
+    ChFrame<> link_position_abs(ChVector3<>(0, 4, 0));
 
     sphericalLink->Initialize(pendulumBody,        // the 1st body to connect
                               floorBody,           // the 2nd body to connect
@@ -86,7 +85,7 @@ int main(int argc, char* argv[]) {
     vis.AddLogo();
     vis.AddSkyBox();
     vis.AddTypicalLights();
-    vis.AddCamera(ChVector<>(2, 2, -5), ChVector<>(0, 1, 0));
+    vis.AddCamera(ChVector3<>(2, 2, -5), ChVector3<>(0, 1, 0));
     vis.AttachSystem(&sys);
 
     // 5 - Simulation loop
