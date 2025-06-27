@@ -10,8 +10,7 @@ set(Chrono_DIR "/home/chrono/chrono/build/cmake/")
 set(CHRONO_DATA_DIR "/home/chrono/chrono/data")
 
 find_package(Chrono
-             COMPONENTS Irrlicht
-             OPTIONAL_COMPONENTS PardisoMKL
+             COMPONENTS Irrlicht Vehicle
              CONFIG)
 
 find_package(ament_cmake REQUIRED)
@@ -40,7 +39,9 @@ if(MSVC)
     add_definitions( "-DNOMINMAX" )                # do not use MSVC's min/max macros
 endif()
 
-add_executable(my_demo src/my_example.cpp)
+add_executable(my_demo src/demos/my_example.cpp)
+
+add_executable(scm_old_demo src/demos/demo_SCMTerrain_RigidTire.cpp)
 
 #--------------------------------------------------------------
 # Set properties for the executable target
@@ -56,11 +57,19 @@ if(MSVC)
     set_target_properties(my_demo PROPERTIES MSVC_RUNTIME_LIBRARY ${CHRONO_MSVC_RUNTIME_LIBRARY})
 endif()
 
+target_compile_definitions(scm_old_demo PRIVATE "CHRONO_DATA_DIR=\"${CHRONO_DATA_DIR}\"") 
+
+if(MSVC)
+    set_target_properties(scm_old_demo PROPERTIES MSVC_RUNTIME_LIBRARY ${CHRONO_MSVC_RUNTIME_LIBRARY})
+endif()
+
 #--------------------------------------------------------------
 # Link to Chrono targets for the requested modules
 #--------------------------------------------------------------
 
 target_link_libraries(my_demo PRIVATE ${CHRONO_TARGETS})
+
+target_link_libraries(scm_old_demo PRIVATE ${CHRONO_TARGETS})
 
 
 ament_package()
